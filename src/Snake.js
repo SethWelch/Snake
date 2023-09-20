@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Grid, Typography } from "@mui/material"
+import { Box, Button, Grid, Typography } from "@mui/material"
 import React, { useEffect } from "react"
 import _ from "lodash"
 import ScoreBoard from "./ScoreBoard"
@@ -7,6 +7,14 @@ const buttonTheme = {
   backgroundColor: "green",
   color: "white",
   height: 40,
+  borderRadius: 2,
+}
+
+const controllerButtonTheme = {
+  backgroundColor: "grey",
+  color: "black",
+  height: 60,
+  width: "100%",
   borderRadius: 2,
 }
 
@@ -166,6 +174,23 @@ function Snake() {
     }, 100)
   }
 
+  const setDirection = (direction) => {
+    const currentDirection = prevDirection.current
+
+    if (direction === "up" && currentDirection !== "up" && currentDirection !== "down") {
+      prevDirection.current = "up"
+    }
+    if (direction === "left" && currentDirection !== "left" && currentDirection !== "right") {
+      prevDirection.current = "left"
+    }
+    if (direction === "down" && currentDirection !== "down" && currentDirection !== "up") {
+      prevDirection.current = "down"
+    }
+    if (direction === "right" && currentDirection !== "right" && currentDirection !== "left") {
+      prevDirection.current = "right"
+    }
+  }
+
   useEffect(() => {
     if (started) {
       prevDirection.current = "right"
@@ -178,19 +203,17 @@ function Snake() {
 
   useEffect(() => {
     function handleKeyDown(e) {
-      const currentDirection = prevDirection.current
-
-      if ((e.key === "w" || e.key === "ArrowUp") && currentDirection !== "up" && currentDirection !== "down") {
-        prevDirection.current = "up"
+      if (e.key === "w" || e.key === "ArrowUp") {
+        setDirection("up")
       }
-      if ((e.key === "a" || e.key === "ArrowLeft") && currentDirection !== "left" && currentDirection !== "right") {
-        prevDirection.current = "left"
+      if (e.key === "a" || e.key === "ArrowLeft") {
+        setDirection("left")
       }
-      if ((e.key === "s" || e.key === "ArrowDown") && currentDirection !== "down" && currentDirection !== "up") {
-        prevDirection.current = "down"
+      if (e.key === "s" || e.key === "ArrowDown") {
+        setDirection("down")
       }
-      if ((e.key === "d" || e.key === "ArrowRight") && currentDirection !== "right" && currentDirection !== "left") {
-        prevDirection.current = "right"
+      if (e.key === "d" || e.key === "ArrowRight") {
+        setDirection("right")
       }
     }
 
@@ -366,7 +389,7 @@ function Snake() {
   }
 
   return (
-    <Box>
+    <Box sx={{ width: "100%", display: "grid", justifyContent: "center" }}>
       <ScoreBoard value={score.current} />
       <Grid
         container
@@ -381,6 +404,54 @@ function Snake() {
         }}
       >
         {getBody()}
+      </Grid>
+      <Grid container justifyContent='space-evenly' alignItems='center' sx={{ width: 300, margin: "auto", mt: 2 }}>
+        <Grid container item sx={{ height: 120, alignItems: "center" }} xs={4}>
+          <Button
+            sx={{ ...controllerButtonTheme }}
+            onClick={() => {
+              setDirection("left")
+            }}
+          >
+            Left
+          </Button>
+        </Grid>
+        <Grid
+          container
+          item
+          direction='column'
+          justifyContent='space-between'
+          alignItems='center'
+          sx={{ height: 200 }}
+          xs={4}
+        >
+          <Button
+            sx={{ ...controllerButtonTheme, width: 80, height: "45%" }}
+            onClick={() => {
+              setDirection("up")
+            }}
+          >
+            Up
+          </Button>
+          <Button
+            sx={{ ...controllerButtonTheme, width: 80, height: "45%" }}
+            onClick={() => {
+              setDirection("down")
+            }}
+          >
+            Down
+          </Button>
+        </Grid>
+        <Grid container item sx={{ height: 120, alignItems: "center" }} xs={4}>
+          <Button
+            sx={{ ...controllerButtonTheme }}
+            onClick={() => {
+              setDirection("right")
+            }}
+          >
+            Right
+          </Button>
+        </Grid>
       </Grid>
     </Box>
   )
