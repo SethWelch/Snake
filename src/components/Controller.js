@@ -142,19 +142,19 @@ function Controller({
             direction="column"
             justifyContent="center"
             alignItems="start"
-            sx={{ height: 200, gap: 2, pl: 4 }}
-            xs={6}
+            sx={{ height: 200, gap: 2, pl: { xs: 0, sm: 2 } }}
+            xs={4}
           >
             {upButton}
             {downButton}
           </Grid>
           <Grid
             container
-            justifyContent="center"
+            justifyContent="end"
             alignItems="center"
             item
-            sx={{ height: 200, gap: 2 }}
-            xs={6}
+            sx={{ height: 200, gap: 2, pr: { xs: 0, sm: 2 } }}
+            xs={8}
           >
             {leftButton}
             {rightButton}
