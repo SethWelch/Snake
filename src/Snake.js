@@ -219,7 +219,7 @@ function Snake() {
 
     gameLoop.current = setTimeout(() => {
       animateFrame.current = requestAnimationFrame(() => run(newSnake))
-    }, 100)
+    }, 50)
   }
 
   useEffect(() => {
