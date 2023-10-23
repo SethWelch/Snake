@@ -203,56 +203,23 @@ function Snake() {
     }
   }
 
-  // function run(snake) {
-  //   const thisSnake = snake || snakeLocation
-  //   const newSnake = updateSnake(thisSnake)
-  //   setSnakeLocation(newSnake)
-  //   ateSelf(newSnake)
+  function run(snake) {
+    const thisSnake = snake || snakeLocation
+    const newSnake = updateSnake(thisSnake)
+    setSnakeLocation(newSnake)
+    ateSelf(newSnake)
 
-  //   if (newSnake.length === rows.length * columns.length) {
-  //     setWinner(true)
-  //   }
-
-  //   if (!foodLocation.current) {
-  //     createFood(thisSnake)
-  //   }
-
-  //   // gameLoop.current = setTimeout(() => {
-  //   animateFrame.current = requestAnimationFrame(() => run(newSnake))
-  //   // }, 100)
-  // }
-
-  async function run() {
-    let then = performance.now()
-    const interval = 100
-    let delta = 0
-
-    let snake = null
-
-    while (true) {
-      let now = await new Promise(requestAnimationFrame)
-      if (now - then < interval - delta) {
-        continue
-      }
-      delta = Math.min(interval, delta + now - then - interval)
-      then = now
-
-      // render code
-      const thisSnake = snake || snakeLocation
-      const newSnake = updateSnake(thisSnake)
-      setSnakeLocation(newSnake)
-      ateSelf(newSnake)
-
-      if (newSnake.length === rows.length * columns.length) {
-        setWinner(true)
-      }
-
-      if (!foodLocation.current) {
-        createFood(thisSnake)
-      }
-
-      snake = newSnake
+    if (newSnake.length === rows.length * columns.length) {
+      setWinner(true)
     }
+
+    if (!foodLocation.current) {
+      createFood(thisSnake)
+    }
+
+    // gameLoop.current = setTimeout(() => {
+    animateFrame.current = requestAnimationFrame(() => run(newSnake))
+    // }, 100)
   }
 
   useEffect(() => {
