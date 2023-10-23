@@ -217,9 +217,9 @@ function Snake() {
       createFood(thisSnake)
     }
 
-    // gameLoop.current = setTimeout(() => {
-    animateFrame.current = requestAnimationFrame(() => run(newSnake))
-    // }, 100)
+    gameLoop.current = setTimeout(() => {
+      animateFrame.current = requestAnimationFrame(() => run(newSnake))
+    }, 100)
   }
 
   useEffect(() => {
