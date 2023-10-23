@@ -1,10 +1,10 @@
 import { Button, Grid } from '@mui/material'
 import React, { useEffect } from 'react'
 
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
 
 function Controller({ setDirection, theme }) {
   useEffect(() => {
@@ -28,7 +28,7 @@ function Controller({ setDirection, theme }) {
     return function cleanup() {
       document.removeEventListener('keydown', handleKeyDown)
     }
-  }, [])
+  }, [setDirection])
 
   const controllerButtonTheme = {
     backgroundColor: 'darkgray',
@@ -48,7 +48,14 @@ function Controller({ setDirection, theme }) {
       alignItems="center"
       sx={{ width: 300, margin: 'auto', mt: 2 }}
     >
-      <Grid container item justifyContent="end" alignItems="center" sx={{ height: 80 }} xs={4}>
+      <Grid
+        container
+        item
+        justifyContent="end"
+        alignItems="center"
+        sx={{ height: 80 }}
+        xs={4}
+      >
         <Button
           sx={{ ...controllerButtonTheme }}
           onClick={() => {

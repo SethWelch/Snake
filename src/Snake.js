@@ -1,16 +1,10 @@
-import { Box, Button, Grid, Typography } from '@mui/material'
+import { Box, Grid, Typography } from '@mui/material'
 import React, { useEffect } from 'react'
 import _ from 'lodash'
 import ScoreBoard from './components/ScoreBoard'
 import Controller from './components/Controller'
 import StartScreen from './components/StartScreen'
-
-const buttonTheme = {
-  backgroundColor: 'green',
-  color: 'white',
-  height: 40,
-  borderRadius: 2,
-}
+import GameOverScreen from './components/GameOverScreen'
 
 function Snake() {
   const magicNumber = 16
@@ -32,7 +26,7 @@ function Snake() {
     snakeColor: 'green',
     gridColor: 'black',
     phoneBackgroundColor: 'maroon',
-    textColor: 'white'
+    textColor: 'white',
   })
   const [theme, setTheme] = React.useState('dark')
 
@@ -133,12 +127,12 @@ function Snake() {
 
     let results = null
 
-    // eslint-disable-next-line no-loop-func
-    while (
-      !results ||
-      snake.find((s) => s.x === results.x && s.y === results.y)
-    ) {
-      results = generateNumbers()
+    while (!results) {
+      const newResults = generateNumbers()
+
+      if (!snake.some((s) => s.x === newResults.x && s.y === newResults.y)) {
+        results = newResults
+      }
     }
 
     foodLocation.current = results
@@ -170,7 +164,7 @@ function Snake() {
     }
   }
 
-  function run(snake, count = 0) {
+  function run(snake) {
     const thisSnake = snake || snakeLocation
     const newSnake = updateSnake(thisSnake)
     setSnakeLocation(newSnake)
@@ -185,7 +179,7 @@ function Snake() {
     }
 
     gameLoop.current = setTimeout(() => {
-      animateFrame.current = requestAnimationFrame(() => run(newSnake, count + 1))
+      animateFrame.current = requestAnimationFrame(() => run(newSnake))
     }, 100)
   }
 
@@ -230,6 +224,7 @@ function Snake() {
       cancelAnimationFrame(animateFrame.current)
       clearTimeout(gameLoop.current)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [started])
 
   const getHeadShape = (direction) => {
@@ -297,7 +292,7 @@ function Snake() {
       const isLast = tail.x === x && tail.y === y
 
       const borderRadius =
-        (theme !== 'nokia') && (isFirst || isLast)
+        theme !== 'nokia' && (isFirst || isLast)
           ? isFirst
             ? getHeadShape(prevDirection.current || 'right')
             : getTailShape(
@@ -334,7 +329,22 @@ function Snake() {
             fontSize: '26px',
           }}
         >
-          {theme === "nokia" ? <Box sx={{ height: 15, width: 10, borderRadius: 8, margin: 'auto', border: `3px solid ${options.snakeColor}`}}/> : '🍎' }
+          {theme === 'nokia' ? (
+            <Typography
+              sx={{
+                textAlign: 'center',
+                fontFamily: 'ArcadeClassic',
+                fontSize: 30,
+                height: 30,
+                lineHeight: '30px',
+                color: options.textColor,
+              }}
+            >
+              O
+            </Typography>
+          ) : (
+            '🍎'
+          )}
         </Box>
       )
     }
@@ -354,55 +364,33 @@ function Snake() {
   const getBody = () => {
     if (winner || gameOver) {
       return (
-        <Grid item sx={{ height: '100%' }}>
-          <Grid
-            container
-            item
-            alignItems="center"
-            justifyContent="center"
-            direction="column"
-            sx={{
-              height: '100%',
-              borderRight: `1px solid ${options.gridColor}`,
-              borderBottom: `1px solid ${options.gridColor}`,
-            }}
-          >
-            <Grid item>
-              <Typography sx={{ fontWeight: 600, fontSize: 32 }}>
-                {gameOver ? 'Game Over' : 'A Winner is You'}
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Button variant="primary" onClick={reset} sx={{ ...buttonTheme }}>
-                Play Again
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
+        <GameOverScreen
+          options={options}
+          theme={theme}
+          gameOver={gameOver}
+          reset={reset}
+        />
       )
     }
     if (!started) {
       return (
-        <StartScreen theme={theme} setTheme={setTheme} options={options} setOptions={setOptions} setStarted={setStarted}/>
+        <StartScreen
+          theme={theme}
+          setTheme={setTheme}
+          options={options}
+          setOptions={setOptions}
+          setStarted={setStarted}
+        />
       )
     } else {
       return (
         <>
           {rows.map((row, rIndex) => {
             return (
-              <Grid
-                container
-                item
-                key={`row-${rIndex}`}
-                // sx={{ borderBottom: `1px solid ${options.backgroundColor}` }}
-              >
+              <Grid container item key={`row-${rIndex}`}>
                 {columns.map((column, cIndex) => {
                   return (
-                    <Grid
-                      item
-                      key={`row-${rIndex}-column-${cIndex}`}
-                      // sx={{ borderRight: `1px solid ${options.backgroundColor}` }}
-                    >
+                    <Grid item key={`row-${rIndex}-column-${cIndex}`}>
                       {getPixel(cIndex, rIndex)}
                     </Grid>
                   )
@@ -423,7 +411,7 @@ function Snake() {
         justifyContent: 'center',
         alignItems: 'center',
         background: options.backgroundColor,
-        height: '100vh'
+        height: '100vh',
       }}
     >
       <Box
@@ -434,20 +422,23 @@ function Snake() {
           height: 'fit-content',
         }}
       >
-        <ScoreBoard value={score.current} options={options} />
-        <Grid
-          container
-          width={rows.length * boxDimension}
-          height={columns.length * boxDimension}
-          sx={{
-            display: 'block',
-            margin: 'auto',
-            background: options.gameBackgroundColor,
-          }}
-        >
-          {getBody()}
-        </Grid>
-        <Controller setDirection={setDirection} theme={theme}/>
+        <Box sx={{ border: `2px dotted ${options.gridColor}`, mt: 2 }}>
+          <ScoreBoard value={score.current} theme={theme} options={options} />
+          <Grid
+            container
+            width={rows.length * boxDimension}
+            height={columns.length * boxDimension}
+            sx={{
+              display: 'block',
+              margin: 'auto',
+              background: options.gameBackgroundColor,
+            }}
+          >
+            {getBody()}
+          </Grid>
+        </Box>
+
+        <Controller setDirection={setDirection} theme={theme} />
       </Box>
     </Box>
   )

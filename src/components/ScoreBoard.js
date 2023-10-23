@@ -1,7 +1,7 @@
 import { Grid, Typography } from '@mui/material'
 import React from 'react'
 
-function ScoreBoard({ value, options }) {
+function ScoreBoard({ value, theme, options }) {
   return (
     <Grid
       container
@@ -10,13 +10,20 @@ function ScoreBoard({ value, options }) {
       sx={{
         background: options.gameBackgroundColor,
         height: 80,
-        width: 512,
-        margin: '16px auto 4px auto',
+        width: '100%',
+        borderBottom: `2px dotted ${
+          theme === 'nokia' ? options.snakeColor : options.gridColor
+        }`,
       }}
     >
       <Grid item>
         <Typography
-          sx={{ fontSize: 30, fontWeight: 600, color: options.textColor }}
+          sx={{
+            fontFamily: 'ArcadeClassic',
+            fontSize: 30,
+            fontWeight: 600,
+            color: options.textColor,
+          }}
         >{`Score: ${value || 0}`}</Typography>
       </Grid>
     </Grid>
