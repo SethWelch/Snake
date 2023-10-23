@@ -8,6 +8,11 @@ function GameOverScreen({ options, theme, gameOver, reset }) {
     color: theme === 'nokia' ? options.gameBackgroundColor : 'white',
     backgroundColor:
       theme === 'nokia' ? options.textColor : options.phoneBackgroundColor,
+    ':hover': {
+      backgroundColor:
+        theme === 'nokia' ? options.textColor : options.phoneBackgroundColor,
+      opacity: '80%',
+    },
     height: 40,
     borderRadius: 2,
   }

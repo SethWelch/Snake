@@ -184,7 +184,7 @@ function Snake() {
   }
 
   const setDirection = (direction) => {
-    const currentDirection = prevDirection.current
+    const currentDirection = prevDirection.current || 'right'
 
     if (
       direction === 'up' &&
