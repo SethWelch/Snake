@@ -7,10 +7,12 @@ import StartScreen from './components/StartScreen'
 import GameOverScreen from './components/GameOverScreen'
 
 function Snake() {
-  const magicNumber = 16
-  const rows = Array.from(Array(magicNumber).keys())
-  const columns = Array.from(Array(magicNumber).keys())
-  const boxDimension = 32
+  const rowNumber = 16
+  const largeBoxDimension = 32
+  const smallBoxDimension = 19
+
+  const rows = Array.from(Array(rowNumber).keys())
+  const columns = Array.from(Array(rowNumber).keys())
 
   const prevDirection = React.useRef()
   const nextDirection = React.useRef()
@@ -57,14 +59,14 @@ function Snake() {
   }
 
   const getNewPosition = (original, increase) => {
-    if (increase && original < magicNumber - 1) {
+    if (increase && original < rowNumber - 1) {
       return original + 1
     }
     if (!increase && original > 0) {
       return original - 1
     }
     if (!increase && original === 0) {
-      return magicNumber - 1
+      return rowNumber - 1
     }
     return 0
   }
@@ -120,8 +122,8 @@ function Snake() {
 
   const createFood = (snake) => {
     const generateNumbers = () => {
-      const randomX = _.random(0, magicNumber - 1)
-      const randomY = _.random(0, magicNumber - 1)
+      const randomX = _.random(0, rowNumber - 1)
+      const randomY = _.random(0, rowNumber - 1)
       return { x: randomX, y: randomY }
     }
 
@@ -306,8 +308,20 @@ function Snake() {
         <Box
           key={`box-${x}-${y}`}
           sx={{
-            height: boxDimension,
-            width: boxDimension,
+            height: {
+              xs: smallBoxDimension,
+              sm: smallBoxDimension,
+              md: smallBoxDimension,
+              lg: largeBoxDimension,
+              xl: largeBoxDimension,
+            },
+            width: {
+              xs: smallBoxDimension,
+              sm: smallBoxDimension,
+              md: smallBoxDimension,
+              lg: largeBoxDimension,
+              xl: largeBoxDimension,
+            },
             background: options.snakeColor,
             borderRadius: borderRadius,
             alignItems: 'center',
@@ -321,8 +335,20 @@ function Snake() {
         <Box
           key={`box-${x}-${y}`}
           sx={{
-            height: boxDimension,
-            width: boxDimension,
+            height: {
+              xs: smallBoxDimension,
+              sm: smallBoxDimension,
+              md: smallBoxDimension,
+              lg: largeBoxDimension,
+              xl: largeBoxDimension,
+            },
+            width: {
+              xs: smallBoxDimension,
+              sm: smallBoxDimension,
+              md: smallBoxDimension,
+              lg: largeBoxDimension,
+              xl: largeBoxDimension,
+            },
             background: options.gameBackgroundColor,
             display: 'grid',
             alignItems: 'center',
@@ -334,16 +360,40 @@ function Snake() {
               sx={{
                 textAlign: 'center',
                 fontFamily: 'ArcadeClassic',
-                fontSize: 30,
-                height: 30,
-                lineHeight: '30px',
+                fontSize: {
+                  xs: '24px',
+                  sm: '24px',
+                  md: '30px',
+                  lg: '30px',
+                  xl: '30px',
+                },
+                height: { xs: 24, sm: 24, md: 30, lg: 30, xl: 30 },
+                lineHeight: {
+                  xs: '24px',
+                  sm: '24px',
+                  md: '30px',
+                  lg: '30px',
+                  xl: '30px',
+                },
                 color: options.textColor,
               }}
             >
               O
             </Typography>
           ) : (
-            '🍎'
+            <Typography
+              sx={{
+                fontSize: {
+                  xs: '14px',
+                  sm: '14px',
+                  md: '14px',
+                  lg: '20px',
+                  xl: '20px',
+                },
+              }}
+            >
+              🍎
+            </Typography>
           )}
         </Box>
       )
@@ -353,8 +403,20 @@ function Snake() {
       <Box
         key={`box-${x}-${y}`}
         sx={{
-          height: boxDimension,
-          width: boxDimension,
+          height: {
+            xs: smallBoxDimension,
+            sm: smallBoxDimension,
+            md: smallBoxDimension,
+            lg: largeBoxDimension,
+            xl: largeBoxDimension,
+          },
+          width: {
+            xs: smallBoxDimension,
+            sm: smallBoxDimension,
+            md: smallBoxDimension,
+            lg: largeBoxDimension,
+            xl: largeBoxDimension,
+          },
           background: options.gameBackgroundColor,
         }}
       />
@@ -406,7 +468,7 @@ function Snake() {
   return (
     <Box
       sx={{
-        width: '100%',
+        width: '100vw',
         display: 'grid',
         justifyContent: 'center',
         alignItems: 'center',
@@ -426,8 +488,20 @@ function Snake() {
           <ScoreBoard value={score.current} theme={theme} options={options} />
           <Grid
             container
-            width={rows.length * boxDimension}
-            height={columns.length * boxDimension}
+            width={{
+              xs: rows.length * smallBoxDimension,
+              sm: rows.length * smallBoxDimension,
+              md: rows.length * smallBoxDimension,
+              lg: rows.length * largeBoxDimension,
+              xl: rows.length * largeBoxDimension,
+            }}
+            height={{
+              xs: columns.length * smallBoxDimension,
+              sm: columns.length * smallBoxDimension,
+              md: columns.length * smallBoxDimension,
+              lg: columns.length * largeBoxDimension,
+              xl: columns.length * largeBoxDimension,
+            }}
             sx={{
               display: 'block',
               margin: 'auto',
