@@ -1,10 +1,9 @@
-import logo from "./logo.svg"
-import "./App.css"
-import Snake from "./Snake"
+import './App.css'
+import Snake from './Snake'
 
 function App() {
   return (
-    <div className='App'>
+    <div className="App">
       <Snake />
     </div>
   )

@@ -1,20 +1,14 @@
-import { Box, Button, Grid, Typography } from "@mui/material"
-import React, { useEffect } from "react"
-import _ from "lodash"
-import ScoreBoard from "./ScoreBoard"
+import { Box, Button, Grid, Typography } from '@mui/material'
+import React, { useEffect } from 'react'
+import _ from 'lodash'
+import ScoreBoard from './components/ScoreBoard'
+import Controller from './components/Controller'
+import StartScreen from './components/StartScreen'
 
 const buttonTheme = {
-  backgroundColor: "green",
-  color: "white",
+  backgroundColor: 'green',
+  color: 'white',
   height: 40,
-  borderRadius: 2,
-}
-
-const controllerButtonTheme = {
-  backgroundColor: "grey",
-  color: "black",
-  height: 60,
-  width: "100%",
   borderRadius: 2,
 }
 
@@ -25,13 +19,22 @@ function Snake() {
   const boxDimension = 32
 
   const prevDirection = React.useRef()
+  const nextDirection = React.useRef()
+
   const foodLocation = React.useRef()
   const score = React.useRef()
   const animateFrame = React.useRef()
   const gameLoop = React.useRef()
 
-  const backgroundColor = "lightgreen"
-  const snakeColor = "darkgreen"
+  const [options, setOptions] = React.useState({
+    backgroundColor: 'black',
+    gameBackgroundColor: 'black',
+    snakeColor: 'green',
+    gridColor: 'black',
+    phoneBackgroundColor: 'maroon',
+    textColor: 'white'
+  })
+  const [theme, setTheme] = React.useState('dark')
 
   const [snakeLocation, setSnakeLocation] = React.useState([
     { x: 4, y: 3 },
@@ -51,6 +54,7 @@ function Snake() {
       { x: 1, y: 3 },
     ])
     prevDirection.current = undefined
+    nextDirection.current = undefined
     foodLocation.current = undefined
     score.current = 0
     setWinner(false)
@@ -73,22 +77,36 @@ function Snake() {
 
   const updateSnake = (thisSnake) => {
     const newSnake = _.cloneDeep(thisSnake)
-    const dir = prevDirection.current || "right"
+    const dir = nextDirection.current || 'right'
 
     switch (dir) {
-      case "left":
-        newSnake[0] = { x: getNewPosition(newSnake[0].x, false), y: newSnake[0].y }
+      case 'left':
+        newSnake[0] = {
+          x: getNewPosition(newSnake[0].x, false),
+          y: newSnake[0].y,
+        }
         break
-      case "up":
-        newSnake[0] = { x: newSnake[0].x, y: getNewPosition(newSnake[0].y, false) }
+      case 'up':
+        newSnake[0] = {
+          x: newSnake[0].x,
+          y: getNewPosition(newSnake[0].y, false),
+        }
         break
-      case "down":
-        newSnake[0] = { x: newSnake[0].x, y: getNewPosition(newSnake[0].y, true) }
+      case 'down':
+        newSnake[0] = {
+          x: newSnake[0].x,
+          y: getNewPosition(newSnake[0].y, true),
+        }
         break
       default:
-        newSnake[0] = { x: getNewPosition(newSnake[0].x, true), y: newSnake[0].y }
+        newSnake[0] = {
+          x: getNewPosition(newSnake[0].x, true),
+          y: newSnake[0].y,
+        }
         break
     }
+
+    prevDirection.current = nextDirection.current
 
     const addExtra = ateFood(newSnake)
 
@@ -116,7 +134,10 @@ function Snake() {
     let results = null
 
     // eslint-disable-next-line no-loop-func
-    while (!results || snake.find((s) => s.x === results.x && s.y === results.y)) {
+    while (
+      !results ||
+      snake.find((s) => s.x === results.x && s.y === results.y)
+    ) {
       results = generateNumbers()
     }
 
@@ -142,23 +163,17 @@ function Snake() {
     const others = [...snake].filter((s) => s !== snake[0])
 
     if (snake) {
-      if (
-        others.find((s) => {
-          return s.x === snake[0].x && s.y === snake[0].y
-        })
-      ) {
+      if (others.some((s) => s.x === snake[0].x && s.y === snake[0].y)) {
         setGameOver(true)
         setStarted(false)
       }
     }
   }
 
-  function run(snake) {
+  function run(snake, count = 0) {
     const thisSnake = snake || snakeLocation
-
     const newSnake = updateSnake(thisSnake)
     setSnakeLocation(newSnake)
-
     ateSelf(newSnake)
 
     if (newSnake.length === rows.length * columns.length) {
@@ -170,30 +185,46 @@ function Snake() {
     }
 
     gameLoop.current = setTimeout(() => {
-      animateFrame.current = requestAnimationFrame(() => run(newSnake))
+      animateFrame.current = requestAnimationFrame(() => run(newSnake, count + 1))
     }, 100)
   }
 
   const setDirection = (direction) => {
     const currentDirection = prevDirection.current
 
-    if (direction === "up" && currentDirection !== "up" && currentDirection !== "down") {
-      prevDirection.current = "up"
+    if (
+      direction === 'up' &&
+      currentDirection !== 'up' &&
+      currentDirection !== 'down'
+    ) {
+      nextDirection.current = 'up'
     }
-    if (direction === "left" && currentDirection !== "left" && currentDirection !== "right") {
-      prevDirection.current = "left"
+    if (
+      direction === 'left' &&
+      currentDirection !== 'left' &&
+      currentDirection !== 'right'
+    ) {
+      nextDirection.current = 'left'
     }
-    if (direction === "down" && currentDirection !== "down" && currentDirection !== "up") {
-      prevDirection.current = "down"
+    if (
+      direction === 'down' &&
+      currentDirection !== 'down' &&
+      currentDirection !== 'up'
+    ) {
+      nextDirection.current = 'down'
     }
-    if (direction === "right" && currentDirection !== "right" && currentDirection !== "left") {
-      prevDirection.current = "right"
+    if (
+      direction === 'right' &&
+      currentDirection !== 'right' &&
+      currentDirection !== 'left'
+    ) {
+      nextDirection.current = 'right'
     }
   }
 
   useEffect(() => {
     if (started) {
-      prevDirection.current = "right"
+      prevDirection.current = 'right'
       run()
     } else if (animateFrame.current) {
       cancelAnimationFrame(animateFrame.current)
@@ -201,52 +232,29 @@ function Snake() {
     }
   }, [started])
 
-  useEffect(() => {
-    function handleKeyDown(e) {
-      if (e.key === "w" || e.key === "ArrowUp") {
-        setDirection("up")
-      }
-      if (e.key === "a" || e.key === "ArrowLeft") {
-        setDirection("left")
-      }
-      if (e.key === "s" || e.key === "ArrowDown") {
-        setDirection("down")
-      }
-      if (e.key === "d" || e.key === "ArrowRight") {
-        setDirection("right")
-      }
-    }
-
-    document.addEventListener("keydown", handleKeyDown)
-
-    return function cleanup() {
-      document.removeEventListener("keydown", handleKeyDown)
-    }
-  }, [])
-
   const getHeadShape = (direction) => {
     switch (direction) {
-      case "right":
-        return "0% 80% 80% 0%"
-      case "left":
-        return "80% 0% 0% 80%"
-      case "up":
-        return "80% 80% 0% 0%"
+      case 'right':
+        return '0% 80% 80% 0%'
+      case 'left':
+        return '80% 0% 0% 80%'
+      case 'up':
+        return '80% 80% 0% 0%'
       default:
-        return "0% 0% 80% 80%"
+        return '0% 0% 80% 80%'
     }
   }
 
   const getTailShape = (direction) => {
     switch (direction) {
-      case "right":
-        return "100% 0% 0% 100%"
-      case "left":
-        return "0% 100% 100% 0%"
-      case "up":
-        return "0% 0% 100% 100%"
+      case 'right':
+        return '100% 0% 0% 100%'
+      case 'left':
+        return '0% 100% 100% 0%'
+      case 'up':
+        return '0% 0% 100% 100%'
       default:
-        return "100% 100% 0% 0%"
+        return '100% 100% 0% 0%'
     }
   }
 
@@ -256,23 +264,31 @@ function Snake() {
       (current.x === 0 && previous.x === 1) ||
       (current.x === rows.length - 1 && previous.x === 0)
     ) {
-      return "right"
-    } else if (previous.x < current.x || (current.x === 0 && previous.x === rows.length - 1)) {
-      return "left"
+      return 'right'
     } else if (
-      (previous.y < current.y && previous.y !== columns.length - 1 && previous.y !== 0) ||
+      previous.x < current.x ||
+      (current.x === 0 && previous.x === rows.length - 1)
+    ) {
+      return 'left'
+    } else if (
+      (previous.y < current.y &&
+        previous.y !== columns.length - 1 &&
+        previous.y !== 0) ||
       (previous.y === 0 && current.y === 1) ||
       (current.y === 0 && previous.y === columns.length - 1)
     ) {
-      return "up"
+      return 'up'
     } else {
-      return "down"
+      return 'down'
     }
   }
 
   const getPixel = (x, y) => {
     const snakeExists = snakeLocation?.find((s) => s.x === x && s.y === y)
-    const foodExists = foodLocation?.current && foodLocation.current.x === x && foodLocation.current.y === y
+    const foodExists =
+      foodLocation?.current &&
+      foodLocation.current.x === x &&
+      foodLocation.current.y === y
 
     if (snakeExists) {
       const head = snakeLocation[0]
@@ -281,21 +297,26 @@ function Snake() {
       const isLast = tail.x === x && tail.y === y
 
       const borderRadius =
-        isFirst || isLast
+        (theme !== 'nokia') && (isFirst || isLast)
           ? isFirst
-            ? getHeadShape(prevDirection.current || "right")
-            : getTailShape(getDirectionOfFormerSquare(tail, snakeLocation[snakeLocation.length - 2]))
-          : ""
+            ? getHeadShape(prevDirection.current || 'right')
+            : getTailShape(
+                getDirectionOfFormerSquare(
+                  tail,
+                  snakeLocation[snakeLocation.length - 2]
+                )
+              )
+          : ''
       return (
         <Box
           key={`box-${x}-${y}`}
           sx={{
             height: boxDimension,
             width: boxDimension,
-            background: snakeColor,
+            background: options.snakeColor,
             borderRadius: borderRadius,
-            alignItems: "center",
-            justifyContent: "center",
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
         />
       )
@@ -307,39 +328,52 @@ function Snake() {
           sx={{
             height: boxDimension,
             width: boxDimension,
-            background: backgroundColor,
-            display: "grid",
-            alignItems: "center",
-            fontSize: "26px",
+            background: options.gameBackgroundColor,
+            display: 'grid',
+            alignItems: 'center',
+            fontSize: '26px',
           }}
         >
-          🍎
+          {theme === "nokia" ? <Box sx={{ height: 15, width: 10, borderRadius: 8, margin: 'auto', border: `3px solid ${options.snakeColor}`}}/> : '🍎' }
         </Box>
       )
     }
 
-    return <Box key={`box-${x}-${y}`} sx={{ height: boxDimension, width: boxDimension, background: backgroundColor }} />
+    return (
+      <Box
+        key={`box-${x}-${y}`}
+        sx={{
+          height: boxDimension,
+          width: boxDimension,
+          background: options.gameBackgroundColor,
+        }}
+      />
+    )
   }
 
   const getBody = () => {
     if (winner || gameOver) {
       return (
-        <Grid item sx={{ height: "100%" }}>
+        <Grid item sx={{ height: '100%' }}>
           <Grid
             container
             item
-            alignItems='center'
-            justifyContent='center'
-            direction='column'
-            sx={{ height: "100%", borderRight: "1px solid black", borderBottom: "1px solid black" }}
+            alignItems="center"
+            justifyContent="center"
+            direction="column"
+            sx={{
+              height: '100%',
+              borderRight: `1px solid ${options.gridColor}`,
+              borderBottom: `1px solid ${options.gridColor}`,
+            }}
           >
             <Grid item>
               <Typography sx={{ fontWeight: 600, fontSize: 32 }}>
-                {gameOver ? "Game Over" : "A Winner is You"}
+                {gameOver ? 'Game Over' : 'A Winner is You'}
               </Typography>
             </Grid>
             <Grid item>
-              <Button variant='primary' onClick={reset} sx={{ ...buttonTheme }}>
+              <Button variant="primary" onClick={reset} sx={{ ...buttonTheme }}>
                 Play Again
               </Button>
             </Grid>
@@ -349,33 +383,26 @@ function Snake() {
     }
     if (!started) {
       return (
-        <Grid
-          container
-          item
-          alignItems='center'
-          justifyContent='center'
-          direction='column'
-          sx={{ height: "100%", borderRight: "1px solid black", borderBottom: "1px solid black" }}
-        >
-          <Grid item>
-            <Typography sx={{ fontWeight: 600, fontSize: 32 }}>Snake</Typography>
-          </Grid>
-          <Grid item>
-            <Button variant='primary' onClick={() => setStarted(true)} sx={{ ...buttonTheme }}>
-              Start Game
-            </Button>
-          </Grid>
-        </Grid>
+        <StartScreen theme={theme} setTheme={setTheme} options={options} setOptions={setOptions} setStarted={setStarted}/>
       )
     } else {
       return (
         <>
           {rows.map((row, rIndex) => {
             return (
-              <Grid container item key={`row-${rIndex}`} sx={{ borderBottom: "1px solid black" }}>
+              <Grid
+                container
+                item
+                key={`row-${rIndex}`}
+                // sx={{ borderBottom: `1px solid ${options.backgroundColor}` }}
+              >
                 {columns.map((column, cIndex) => {
                   return (
-                    <Grid item key={`row-${rIndex}-column-${cIndex}`} sx={{ borderRight: "1px solid black" }}>
+                    <Grid
+                      item
+                      key={`row-${rIndex}-column-${cIndex}`}
+                      // sx={{ borderRight: `1px solid ${options.backgroundColor}` }}
+                    >
                       {getPixel(cIndex, rIndex)}
                     </Grid>
                   )
@@ -389,70 +416,39 @@ function Snake() {
   }
 
   return (
-    <Box sx={{ width: "100%", display: "grid", justifyContent: "center" }}>
-      <ScoreBoard value={score.current} />
-      <Grid
-        container
-        width={rows.length * boxDimension + rows.length + 1}
-        height={columns.length * boxDimension + columns.length + 1}
+    <Box
+      sx={{
+        width: '100%',
+        display: 'grid',
+        justifyContent: 'center',
+        alignItems: 'center',
+        background: options.backgroundColor,
+        height: '100vh'
+      }}
+    >
+      <Box
         sx={{
-          borderLeft: "1px solid black",
-          borderTop: "1px solid black",
-          display: "block",
-          margin: "auto",
-          background: backgroundColor,
+          background: options.phoneBackgroundColor || 'maroon',
+          padding: '8px 16px 32px',
+          borderRadius: '8px',
+          height: 'fit-content',
         }}
       >
-        {getBody()}
-      </Grid>
-      <Grid container justifyContent='space-evenly' alignItems='center' sx={{ width: 300, margin: "auto", mt: 2 }}>
-        <Grid container item sx={{ height: 120, alignItems: "center" }} xs={4}>
-          <Button
-            sx={{ ...controllerButtonTheme }}
-            onClick={() => {
-              setDirection("left")
-            }}
-          >
-            Left
-          </Button>
-        </Grid>
+        <ScoreBoard value={score.current} options={options} />
         <Grid
           container
-          item
-          direction='column'
-          justifyContent='space-between'
-          alignItems='center'
-          sx={{ height: 200 }}
-          xs={4}
+          width={rows.length * boxDimension}
+          height={columns.length * boxDimension}
+          sx={{
+            display: 'block',
+            margin: 'auto',
+            background: options.gameBackgroundColor,
+          }}
         >
-          <Button
-            sx={{ ...controllerButtonTheme, width: 80, height: "45%" }}
-            onClick={() => {
-              setDirection("up")
-            }}
-          >
-            Up
-          </Button>
-          <Button
-            sx={{ ...controllerButtonTheme, width: 80, height: "45%" }}
-            onClick={() => {
-              setDirection("down")
-            }}
-          >
-            Down
-          </Button>
+          {getBody()}
         </Grid>
-        <Grid container item sx={{ height: 120, alignItems: "center" }} xs={4}>
-          <Button
-            sx={{ ...controllerButtonTheme }}
-            onClick={() => {
-              setDirection("right")
-            }}
-          >
-            Right
-          </Button>
-        </Grid>
-      </Grid>
+        <Controller setDirection={setDirection} theme={theme}/>
+      </Box>
     </Box>
   )
 }
