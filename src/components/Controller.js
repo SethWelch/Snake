@@ -141,7 +141,7 @@ function Controller({
             item
             direction="column"
             justifyContent="center"
-            alignItems="start"
+            alignItems={{ xs: 'center', sm: 'start' }}
             sx={{ height: 200, gap: 2, pl: { xs: 0, sm: 2 } }}
             xs={4}
           >
