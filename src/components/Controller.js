@@ -6,7 +6,12 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
 
-function Controller({ setDirection, theme }) {
+function Controller({
+  setDirection,
+  theme,
+  controllerLayout,
+  setControllerLayout,
+}) {
   useEffect(() => {
     function handleKeyDown(e) {
       if (e.key === 'w' || e.key === 'ArrowUp') {
@@ -41,67 +46,115 @@ function Controller({ setDirection, theme }) {
     },
   }
 
-  return (
-    <Grid
-      container
-      justifyContent="space-evenly"
-      alignItems="center"
-      sx={{ width: 300, margin: 'auto', mt: 2 }}
+  const leftButton = (
+    <Button
+      sx={{ ...controllerButtonTheme }}
+      onClick={() => {
+        setDirection('left')
+      }}
     >
-      <Grid
-        container
-        item
-        justifyContent="end"
-        alignItems="center"
-        sx={{ height: 80 }}
-        xs={4}
-      >
-        <Button
-          sx={{ ...controllerButtonTheme }}
-          onClick={() => {
-            setDirection('left')
-          }}
+      <KeyboardArrowLeftIcon />
+    </Button>
+  )
+  const rightButton = (
+    <Button
+      sx={{ ...controllerButtonTheme }}
+      onClick={() => {
+        setDirection('right')
+      }}
+    >
+      <KeyboardArrowRightIcon />
+    </Button>
+  )
+  const upButton = (
+    <Button
+      sx={{ ...controllerButtonTheme }}
+      onClick={() => {
+        setDirection('up')
+      }}
+    >
+      <KeyboardArrowUpIcon />
+    </Button>
+  )
+  const downButton = (
+    <Button
+      sx={{ ...controllerButtonTheme }}
+      onClick={() => {
+        setDirection('down')
+      }}
+    >
+      <KeyboardArrowDownIcon />
+    </Button>
+  )
+
+  return (
+    <>
+      {controllerLayout === 'middle' ? (
+        <Grid
+          container
+          justifyContent="space-evenly"
+          alignItems="center"
+          sx={{ width: 300, margin: 'auto', mt: 2 }}
         >
-          <KeyboardArrowLeftIcon />
-        </Button>
-      </Grid>
-      <Grid
-        container
-        item
-        direction="column"
-        justifyContent="space-between"
-        alignItems="center"
-        sx={{ height: 200 }}
-        xs={4}
-      >
-        <Button
-          sx={{ ...controllerButtonTheme }}
-          onClick={() => {
-            setDirection('up')
-          }}
+          <Grid
+            container
+            item
+            justifyContent="end"
+            alignItems="center"
+            sx={{ height: 80 }}
+            xs={4}
+          >
+            {leftButton}
+          </Grid>
+          <Grid
+            container
+            item
+            direction="column"
+            justifyContent="space-between"
+            alignItems="center"
+            sx={{ height: 200 }}
+            xs={4}
+          >
+            {upButton}
+            {downButton}
+          </Grid>
+          <Grid container alignItems="center" item sx={{ height: 80 }} xs={4}>
+            {rightButton}
+          </Grid>
+        </Grid>
+      ) : (
+        <Grid
+          container
+          justifyContent="space-between"
+          alignItems="center"
+          sx={{ width: '100%', margin: 'auto', mt: 2 }}
         >
-          <KeyboardArrowUpIcon />
-        </Button>
-        <Button
-          sx={{ ...controllerButtonTheme }}
-          onClick={() => {
-            setDirection('down')
-          }}
-        >
-          <KeyboardArrowDownIcon />
-        </Button>
-      </Grid>
-      <Grid container item sx={{ height: 80, alignItems: 'center' }} xs={4}>
-        <Button
-          sx={{ ...controllerButtonTheme }}
-          onClick={() => {
-            setDirection('right')
-          }}
-        >
-          <KeyboardArrowRightIcon />
-        </Button>
-      </Grid>
-    </Grid>
+          <Grid
+            container
+            item
+            direction="column"
+            justifyContent="center"
+            alignItems="start"
+            sx={{ height: 200, gap: 2, pl: 4 }}
+            xs={6}
+          >
+            {upButton}
+            {downButton}
+          </Grid>
+          <Grid
+            container
+            justifyContent="center"
+            alignItems="center"
+            item
+            sx={{ height: 200, gap: 2 }}
+            xs={6}
+          >
+            {leftButton}
+            {rightButton}
+          </Grid>
+        </Grid>
+      )}
+    </>
   )
 }
 

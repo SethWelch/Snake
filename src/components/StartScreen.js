@@ -11,7 +11,15 @@ import {
 } from '@mui/material'
 import React, { useEffect } from 'react'
 
-function StartScreen({ theme, setTheme, options, setOptions, setStarted }) {
+function StartScreen({
+  theme,
+  setTheme,
+  options,
+  setOptions,
+  setStarted,
+  controllerLayout,
+  setControllerLayout,
+}) {
   const [selectedTheme, setSelectedTheme] = React.useState(
     localStorage.getItem('theme') || 'nokia'
   )
@@ -50,6 +58,11 @@ function StartScreen({ theme, setTheme, options, setOptions, setStarted }) {
     setTheme(selectedTheme)
     localStorage.setItem('theme', selectedTheme)
   }, [selectedTheme, setOptions, setTheme])
+
+  const setLayout = (value) => {
+    setControllerLayout(value)
+    localStorage.setItem('layout', value)
+  }
 
   useEffect(() => {
     function handleKeyDown(e) {
@@ -146,7 +159,10 @@ function StartScreen({ theme, setTheme, options, setOptions, setStarted }) {
               name="row-radio-buttons-group"
               onChange={(e) => setSelectedTheme(e.target.value)}
               value={selectedTheme}
-              sx={{ span: { fontFamily: 'ArcadeClassic', fontSize: 20 } }}
+              sx={{
+                span: { fontFamily: 'ArcadeClassic', fontSize: 20 },
+                justifyContent: 'center',
+              }}
             >
               <FormControlLabel
                 value="nokia"
@@ -162,6 +178,51 @@ function StartScreen({ theme, setTheme, options, setOptions, setStarted }) {
                 value="light"
                 control={<Radio sx={{ ...radioTheme }} />}
                 label="Light"
+              />
+            </RadioGroup>
+          </FormControl>
+        </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            mt: 3,
+          }}
+        >
+          <FormControl sx={{ color: options.textColor }}>
+            <FormLabel
+              id="radio-buttons-group-label"
+              sx={{
+                fontFamily: 'ArcadeClassic',
+                fontSize: 24,
+                wordSpacing: '8px',
+                color: options.textColor,
+                '&.Mui-focused': { color: options.textColor },
+              }}
+            >
+              Controller Layout
+            </FormLabel>
+            <RadioGroup
+              row
+              aria-labelledby="radio-buttons-group-label"
+              name="row-radio-buttons-group"
+              onChange={(e) => setLayout(e.target.value)}
+              value={controllerLayout}
+              sx={{
+                span: { fontFamily: 'ArcadeClassic', fontSize: 20 },
+                justifyContent: 'center',
+              }}
+            >
+              <FormControlLabel
+                value="middle"
+                control={<Radio sx={{ ...radioTheme }} />}
+                label="Middle"
+              />
+              <FormControlLabel
+                value="sides"
+                control={<Radio sx={{ ...radioTheme }} />}
+                label="Sides"
               />
             </RadioGroup>
           </FormControl>

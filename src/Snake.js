@@ -32,6 +32,9 @@ function Snake() {
     textColor: 'white',
   })
   const [theme, setTheme] = React.useState('dark')
+  const [controllerLayout, setControllerLayout] = React.useState(
+    localStorage.getItem('layout') || 'middle'
+  )
 
   const [snakeLocation, setSnakeLocation] = React.useState([
     { x: 4, y: 3 },
@@ -443,6 +446,8 @@ function Snake() {
           options={options}
           setOptions={setOptions}
           setStarted={setStarted}
+          controllerLayout={controllerLayout}
+          setControllerLayout={setControllerLayout}
         />
       )
     } else {
@@ -513,7 +518,12 @@ function Snake() {
           </Grid>
         </Box>
 
-        <Controller setDirection={setDirection} theme={theme} />
+        <Controller
+          setDirection={setDirection}
+          theme={theme}
+          controllerLayout={controllerLayout}
+          setControllerLayout={setControllerLayout}
+        />
       </Box>
     </Box>
   )
