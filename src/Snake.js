@@ -9,6 +9,7 @@ import GameOverScreen from './components/GameOverScreen'
 function Snake() {
   const rowNumber = 16
   const largeBoxDimension = 32
+  const mediumBoxDimension = 28
   const smallBoxDimension = 19
 
   const rows = Array.from(Array(rowNumber).keys())
@@ -310,15 +311,15 @@ function Snake() {
           sx={{
             height: {
               xs: smallBoxDimension,
-              sm: smallBoxDimension,
-              md: smallBoxDimension,
+              sm: mediumBoxDimension,
+              md: mediumBoxDimension,
               lg: largeBoxDimension,
               xl: largeBoxDimension,
             },
             width: {
               xs: smallBoxDimension,
-              sm: smallBoxDimension,
-              md: smallBoxDimension,
+              sm: mediumBoxDimension,
+              md: mediumBoxDimension,
               lg: largeBoxDimension,
               xl: largeBoxDimension,
             },
@@ -337,15 +338,15 @@ function Snake() {
           sx={{
             height: {
               xs: smallBoxDimension,
-              sm: smallBoxDimension,
-              md: smallBoxDimension,
+              sm: mediumBoxDimension,
+              md: mediumBoxDimension,
               lg: largeBoxDimension,
               xl: largeBoxDimension,
             },
             width: {
               xs: smallBoxDimension,
-              sm: smallBoxDimension,
-              md: smallBoxDimension,
+              sm: mediumBoxDimension,
+              md: mediumBoxDimension,
               lg: largeBoxDimension,
               xl: largeBoxDimension,
             },
@@ -386,7 +387,7 @@ function Snake() {
                 fontSize: {
                   xs: '14px',
                   sm: '14px',
-                  md: '14px',
+                  lg: '20px',
                   lg: '20px',
                   xl: '20px',
                 },
@@ -405,15 +406,15 @@ function Snake() {
         sx={{
           height: {
             xs: smallBoxDimension,
-            sm: smallBoxDimension,
-            md: smallBoxDimension,
+            sm: mediumBoxDimension,
+            md: mediumBoxDimension,
             lg: largeBoxDimension,
             xl: largeBoxDimension,
           },
           width: {
             xs: smallBoxDimension,
-            sm: smallBoxDimension,
-            md: smallBoxDimension,
+            sm: mediumBoxDimension,
+            md: mediumBoxDimension,
             lg: largeBoxDimension,
             xl: largeBoxDimension,
           },
@@ -490,15 +491,15 @@ function Snake() {
             container
             width={{
               xs: rows.length * smallBoxDimension,
-              sm: rows.length * smallBoxDimension,
-              md: rows.length * smallBoxDimension,
+              sm: rows.length * mediumBoxDimension,
+              md: rows.length * mediumBoxDimension,
               lg: rows.length * largeBoxDimension,
               xl: rows.length * largeBoxDimension,
             }}
             height={{
               xs: columns.length * smallBoxDimension,
-              sm: columns.length * smallBoxDimension,
-              md: columns.length * smallBoxDimension,
+              sm: columns.length * mediumBoxDimension,
+              md: columns.length * mediumBoxDimension,
               lg: columns.length * largeBoxDimension,
               xl: columns.length * largeBoxDimension,
             }}
