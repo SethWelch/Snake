@@ -7,6 +7,7 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
 
 function Controller({
+  started,
   setDirection,
   theme,
   controllerLayout,
@@ -46,11 +47,17 @@ function Controller({
     },
   }
 
+  const setNewDirection = (direction) => {
+    if (started) {
+      setDirection(direction)
+    }
+  }
+
   const leftButton = (
     <Button
       sx={{ ...controllerButtonTheme }}
       onClick={() => {
-        setDirection('left')
+        setNewDirection('left')
       }}
     >
       <KeyboardArrowLeftIcon />
@@ -60,7 +67,7 @@ function Controller({
     <Button
       sx={{ ...controllerButtonTheme }}
       onClick={() => {
-        setDirection('right')
+        setNewDirection('right')
       }}
     >
       <KeyboardArrowRightIcon />
@@ -70,7 +77,7 @@ function Controller({
     <Button
       sx={{ ...controllerButtonTheme }}
       onClick={() => {
-        setDirection('up')
+        setNewDirection('up')
       }}
     >
       <KeyboardArrowUpIcon />
@@ -80,7 +87,7 @@ function Controller({
     <Button
       sx={{ ...controllerButtonTheme }}
       onClick={() => {
-        setDirection('down')
+        setNewDirection('down')
       }}
     >
       <KeyboardArrowDownIcon />

@@ -519,6 +519,7 @@ function Snake() {
         </Box>
 
         <Controller
+          started={started}
           setDirection={setDirection}
           theme={theme}
           controllerLayout={controllerLayout}
